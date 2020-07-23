@@ -15,5 +15,11 @@
             <artifactId>jedis</artifactId>
             <version>3.3.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.redislabs</groupId>
+            <artifactId>jrebloom</artifactId>
+            <version>1.2.0</version>
+        </dependency>
     </dependencies>
 </project>
