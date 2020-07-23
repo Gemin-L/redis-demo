@@ -2,14 +2,12 @@ package com.lhd.redis.demo.operate;
 
 import com.lhd.redis.demo.factory.LogFactory;
 import com.lhd.redis.demo.factory.RedisFactory;
-import redis.clients.jedis.GeoRadiusResponse;
-import redis.clients.jedis.GeoUnit;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.*;
 import redis.clients.jedis.params.GeoRadiusParam;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * 地理位置相关
@@ -56,6 +54,12 @@ public class Geohash {
         for (GeoRadiusResponse geoRadiusResponse : result) {
             LogFactory.info("附件20KM内的元素为{},距离{},坐标{} {}", geoRadiusResponse.getMemberByString(), geoRadiusResponse.getDistance(), geoRadiusResponse.getCoordinate().getLongitude(), geoRadiusResponse.getCoordinate().getLatitude());
         }
+
+        //获取所有数据
+        Set<String> all = jedis.zrange("test", 0, -1);
+        LogFactory.info("geo所有数据{}", all.toString());
+        List<GeoCoordinate> allGeos = jedis.geopos("test", all.toArray(new String[0]));
+        LogFactory.info("geo所有数据包括地理数据{}", allGeos);
     }
 
 }
