@@ -4,6 +4,7 @@ import com.lhd.redis.demo.factory.LogFactory;
 import com.lhd.redis.demo.factory.RedisFactory;
 import redis.clients.jedis.BitOP;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Pipeline;
 
 import java.util.Random;
 
@@ -26,12 +27,16 @@ public class Bitmap {
             统计拥有 1、50、99标签的用户
          */
         for (int i = 0; i < 100; i++) {
+            Pipeline pipeline = jedis.pipelined();
+            pipeline.multi();
             for (int j = 0; j < 1000; j++) {
                 Random random = new Random();
                 int nextInt = random.nextInt(random.nextInt(100) + 1);
                 //随机模拟是否有该标签
-                jedis.setbit("tag" + i, j, nextInt > random.nextInt(random.nextInt(50) + 1));
+                pipeline.setbit("tag" + i, j, nextInt > random.nextInt(random.nextInt(50) + 1));
             }
+            pipeline.exec();
+            pipeline.close();
             LogFactory.info("tag{} 该标签人数:{}", i, jedis.bitcount("tag" + i));
         }
 
